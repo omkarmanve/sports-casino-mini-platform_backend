@@ -1,12 +1,11 @@
 const { Pool } = require("pg");
 const env = require("./env");
 
-const pool = new Pool({
-  connectionString: env.DATABASE_URL
-});
+const isRender = env.DATABASE_URL.includes("render.com");
 
-pool.on("error", (err) => {
-  console.error("Unexpected PG pool error:", err);
+const pool = new Pool({
+  connectionString: env.DATABASE_URL,
+  ssl: isRender ? { rejectUnauthorized: false } : false
 });
 
 module.exports = pool;
